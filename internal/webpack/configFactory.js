@@ -125,6 +125,7 @@ export default function webpackConfigFactory(buildOptions) {
         // Otherwise we expect our bundled client to be served from this path.
         bundleConfig.webPath,
       ),
+      hotUpdateChunkFilename: '[hash].hot-update.js', // needed for AssetsPlugin to filter out hmr updates
     },
 
     target: isClient
@@ -320,12 +321,7 @@ export default function webpackConfigFactory(buildOptions) {
       ifDev(() => new webpack.NoEmitOnErrorsPlugin()),
 
       // We need this plugin to enable hot reloading of our client.
-      ifDevClient(
-        () =>
-          new webpack.HotModuleReplacementPlugin({
-            multiStep: true,
-          }),
-      ),
+      ifDevClient(() => new webpack.HotModuleReplacementPlugin()),
 
       // For the production build of the client we need to extract the CSS into
       // CSS files.
